@@ -261,60 +261,63 @@ def plot_training_history(history, metric='loss'):
     plt.grid(True)
     plt.show()
 
-def evaluate_model(model, X_test, y_test, class_names=("Class 0", "Class 1"), plot_name = ""):
+def evaluate_model(model,X_test,y_test,class_names=("Class 0", "Class 1"),plot_name=""):
     """
-    Evaluate a trained Keras model on test data, printing loss/metrics,
-    classification report, F1-score, and displaying a confusion matrix.
-
-    Parameters
-    ----------
-    model : keras.Model
-        Trained Keras model to evaluate.
-    X_test : np.ndarray
-        Test features.
-    y_test : np.ndarray
-        Test labels (integer-encoded, not one-hot).
-    class_names : tuple of str
-        Names for the classes, used in the confusion matrix display.
-    plot_name : str
-        Name of the model to be displayed in the title of the resulting confusion matrix.
-
-    Returns
-    -------
-    dict
-        Dictionary containing test loss, accuracy, f1_score (macro),
-        and the confusion matrix.
-    
-    Example
-    -------
-    >>> eval_results = evaluate_model(model_1, X_test, y_test, class_names=('notflip', 'flip'), plot_name="model_1")
+    Evaluate a binary Keras classifier using integer labels (0/1).
     """
-    
-    # One-hot encode y_test for model.evaluate
-    y_test_cat = tf.keras.utils.to_categorical(y_test, num_classes=len(class_names))
 
-    # Evaluate using Keras built-in metrics
-    results = model.evaluate(X_test, y_test_cat, verbose=0)
+    # Ensure labels are compatible with Dense(1, sigmoid)
+    y_test_eval = np.asarray(y_test).reshape(-1, 1)
+
+    # Keras evaluation
+    results = model.evaluate(
+        X_test,
+        y_test_eval,
+        verbose=0
+    )
+
     metric_names = model.metrics_names
+
     print("Test set evaluation:")
     for name, value in zip(metric_names, results):
         print(f"  {name}: {value}")
 
-    # Predictions
-    y_pred_probs = model.predict(X_test)
-    y_pred = y_pred_probs.argmax(axis=1)
+    # Predicted probabilities
+    y_pred_probs = model.predict(X_test, verbose=0).ravel()
 
-    # Classification report
+    # Convert probabilities -> classes
+    y_pred = (y_pred_probs >= 0.5).astype(int)
+
+    # sklearn prefers 1D labels
+    y_test_1d = np.asarray(y_test).ravel()
+
     print("\nClassification Report:")
-    print(classification_report(y_test, y_pred, target_names=class_names))
+    print(
+        classification_report(
+            y_test_1d,
+            y_pred,
+            target_names=class_names
+        )
+    )
 
-    # F1-score (macro)
-    macro_f1 = f1_score(y_test, y_pred, average="macro")
+    macro_f1 = f1_score(
+        y_test_1d,
+        y_pred,
+        average="macro"
+    )
+
     print(f"Macro F1-score: {macro_f1:.4f}")
 
-    # Confusion matrix
-    cm = confusion_matrix(y_test, y_pred)
-    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_names)
+    cm = confusion_matrix(
+        y_test_1d,
+        y_pred
+    )
+
+    disp = ConfusionMatrixDisplay(
+        confusion_matrix=cm,
+        display_labels=class_names
+    )
+
     disp.plot(cmap="Blues")
     plt.title(f"Confusion Matrix ({plot_name})")
     plt.show()
@@ -322,8 +325,11 @@ def evaluate_model(model, X_test, y_test, class_names=("Class 0", "Class 1"), pl
     return {
         "test_loss_metrics": dict(zip(metric_names, results)),
         "macro_f1": macro_f1,
-        "confusion_matrix": cm
+        "confusion_matrix": cm,
+        "predicted_probabilities": y_pred_probs
     }
+
+
 
 
 #############################################################################################################
