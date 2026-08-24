@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import pickle
+import cv2
 
 import numpy as np
 import pandas as pd
@@ -143,13 +144,7 @@ def shuffle_training_data(X_train, y_train, random_state=13):
 
     return shuffle(X_train, y_train, random_state=random_state)
 
-def create_validation_set(
-    X_train,
-    y_train,
-    val_size=0.2,
-    random_state=13,
-    stratify=True
-):
+def create_validation_set(X_train,y_train,val_size=0.2,random_state=13,stratify=True):
     """
     Split training data into training and validation subsets.
 
@@ -214,6 +209,94 @@ def create_validation_set(
     )
 
     return X_train_new, X_val, y_train_new, y_val
+
+def enhance_image(image,gamma=0.9,clahe_clip=10.0,clahe_grid=(16, 16),sharpen_amount=1.0):
+    """
+    Enhance a normalized grayscale image.
+
+    Parameters
+    ----------
+    image : np.ndarray
+        Image of shape (H, W, 1), expected range [0, 1].
+
+    gamma : float
+        < 1 brightens image.
+        > 1 darkens image.
+
+    CLAHE — Contrast Limited Adaptive Histogram Equalization
+
+    clahe_clip : float
+        Strength of local contrast enhancement.
+
+    clahe_grid : tuple
+        Size of local regions used by CLAHE.
+
+    sharpen_amount : float
+        Strength of unsharp masking.
+
+    Returns
+    -------
+    np.ndarray
+        Enhanced float32 image in range [0, 1].
+    """
+
+    # Remove final channel dimension
+    img = np.squeeze(image)
+    # Convert [0,1] float -> [0,255] uint8 for OpenCV
+    img = np.clip(img * 255, 0, 255).astype(np.uint8)
+
+    
+    # 1. Gamma / exposure
+    img_float = img.astype(np.float32) / 255.0
+    img_float = np.power(img_float, gamma)
+    img = np.clip(img_float * 255,0,255).astype(np.uint8)
+
+    # 2. Local contrast: CLAHE
+    clahe = cv2.createCLAHE(clipLimit=clahe_clip,tileGridSize=clahe_grid)
+    img = clahe.apply(img)
+
+    # 3. Mild sharpening
+    blurred = cv2.GaussianBlur(img,(0, 0),sigmaX=1.0)
+    img = cv2.addWeighted(img,1 + sharpen_amount,blurred,-sharpen_amount,0)
+
+    # Convert back to float32 [0,1]
+    img = img.astype(np.float32) / 255.0
+
+    return img[..., np.newaxis]
+
+def enhance_dataset(X, **kwargs):
+    """
+    Apply image enhancement to a batch of images.
+
+    Parameters
+    ----------
+    X : array-like
+        Batch of images to enhance. Shape should be (N, H, W) or (N, H, W, C).
+    **kwargs : dict
+        Keyword arguments to pass to enhance_image(). Common options:
+        - gamma : float, default=1.0
+            Gamma correction value for exposure adjustment.
+        - clahe_clip : float, default=2.0
+            Clip limit for CLAHE (Contrast Limited Adaptive Histogram Equalization).
+        - clahe_grid : tuple, default=(8, 8)
+            Tile grid size for CLAHE.
+        - sharpen_amount : float, default=0.0
+            Sharpening intensity.
+
+    Returns
+    -------
+    np.ndarray
+        Enhanced images as float32 array with shape (N, H, W, 1) and values in [0, 1].
+
+    Examples
+    --------
+    >>> X = np.random.rand(10, 224, 224, 1)  # 10 images
+    >>> enhanced = enhance_dataset(X, gamma=1.2, clahe_clip=3.0)
+    """
+    return np.stack([
+        enhance_image(image, **kwargs)
+        for image in X
+    ]).astype(np.float32)
 
 
 #############################################################################################################
@@ -328,8 +411,6 @@ def evaluate_model(model,X_test,y_test,class_names=("Class 0", "Class 1"),plot_n
         "confusion_matrix": cm,
         "predicted_probabilities": y_pred_probs
     }
-
-
 
 
 #############################################################################################################
