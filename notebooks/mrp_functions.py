@@ -210,7 +210,73 @@ def create_validation_set(X_train,y_train,val_size=0.2,random_state=13,stratify=
 
     return X_train_new, X_val, y_train_new, y_val
 
+def enhance_image(image):
+    """
+    Apply Sobel edge detection to a grayscale image.
 
+    Parameters
+    ----------
+    image : np.ndarray
+        Grayscale image with shape (H, W, 1).
+
+    Returns
+    -------
+    np.ndarray
+        Sobel edge-magnitude image with shape (H, W, 1),
+        dtype float32 and values normalized to [0, 1].
+    
+    Example
+    -------
+    >>> img = X_train[0]
+    >>> enh_img = enhance_image(img)
+    """
+
+    # Convert (H, W, 1) -> (H, W)
+    img = np.squeeze(image).astype(np.float32)
+
+    # Calculate horizontal and vertical intensity gradients
+    sobel_x = cv2.Sobel(img,cv2.CV_32F,1,0,ksize=3)
+
+    sobel_y = cv2.Sobel(img,cv2.CV_32F,0,1,ksize=3)
+
+    # Combine x and y gradients into overall edge magnitude
+    edges = np.sqrt(sobel_x**2 + sobel_y**2)
+
+    # Normalize to [0, 1]
+    max_value = edges.max()
+
+    if max_value > 0:
+        edges = edges / max_value
+
+    # Restore channel dimension: (H, W) -> (H, W, 1)
+    edges = edges[..., np.newaxis]
+
+    return edges.astype(np.float32)
+
+def enhance_dataset(X):
+    """
+    Apply Sobel edge detection function, enhance_image(), to every image in a dataset.
+
+    Parameters
+    ----------
+    X : np.ndarray
+        Image dataset with shape (N, H, W, 1).
+
+    Returns
+    -------
+    np.ndarray
+        Sobel-transformed dataset with shape (N, H, W, 1),
+        dtype float32 and individual images normalized to [0, 1].
+    
+    Example
+    --------
+    >>> X_train_enh = enahnce_dataset(X_train)
+    """
+
+    return np.stack([
+        enhance_image(image)
+        for image in X
+    ]).astype(np.float32)
 
 
 #############################################################################################################
