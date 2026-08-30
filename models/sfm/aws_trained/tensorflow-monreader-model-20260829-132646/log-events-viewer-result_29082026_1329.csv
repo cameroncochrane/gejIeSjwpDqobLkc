@@ -1,0 +1,198 @@
+timestamp,message
+1.78801E+12,bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+1.78801E+12,bash: no job control in this shell
+1.78801E+12,CUDA compat package should be installed for NVIDIA driver smaller than 575.57.08
+1.78801E+12,Current installed NVIDIA driver version is 595.91.07
+1.78801E+12,Skipping CUDA compat setup as newer NVIDIA driver is installed
+1.78801E+12,WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+1.78801E+12,I0000 00:00:1788006211.443280      52 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+1.78801E+12,"To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags."
+1.78801E+12,"2026-08-29 12:23:43,577 sagemaker-training-toolkit INFO     Imported framework sagemaker_tensorflow_container.training"
+1.78801E+12,"2026-08-29 12:23:43,577 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_program value train_sagemaker.py to Json."
+1.78801E+12,Returning the value itself
+1.78801E+12,"2026-08-29 12:23:43,577 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_region value eu-west-2 to Json."
+1.78801E+12,Returning the value itself
+1.78801E+12,"2026-08-29 12:23:43,577 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_submit_directory value s3://amazon-sagemaker-934912969749-eu-west-2-40xm5p8enanggl/tensorflow-training/code/tensorflow-monreader-model-20260829-121548/source.tar.gz to Json."
+1.78801E+12,Returning the value itself
+1.78801E+12,"2026-08-29 12:23:43,601 sagemaker-training-toolkit INFO     No Neurons detected (normal if no neurons installed)"
+1.78801E+12,"2026-08-29 12:23:43,611 sagemaker-training-toolkit INFO     Provided path: /opt/ml/code  is empty, unzipping"
+1.78801E+12,"/opt/venv/lib64/python3.12/site-packages/sagemaker_training/files.py:142: RuntimeWarning: The default behavior of tarfile extraction has been changed to disallow common exploits (including CVE-2007-4559). By default, absolute/parent paths are disallowed and some mode bits are cleared. See https://access.redhat.com/articles/7004769 for more details.
+  t.extractall(path=path)"
+1.78801E+12,"2026-08-29 12:23:43,883 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_program value train_sagemaker.py to Json."
+1.78801E+12,Returning the value itself
+1.78801E+12,"2026-08-29 12:23:43,883 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_region value eu-west-2 to Json."
+1.78801E+12,Returning the value itself
+1.78801E+12,"2026-08-29 12:23:43,883 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_submit_directory value s3://amazon-sagemaker-934912969749-eu-west-2-40xm5p8enanggl/tensorflow-training/code/tensorflow-monreader-model-20260829-121548/source.tar.gz to Json."
+1.78801E+12,Returning the value itself
+1.78801E+12,"2026-08-29 12:23:43,884 sagemaker-training-toolkit INFO     No Neurons detected (normal if no neurons installed)"
+1.78801E+12,"2026-08-29 12:23:43,916 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_program value train_sagemaker.py to Json."
+1.78801E+12,Returning the value itself
+1.78801E+12,"2026-08-29 12:23:43,916 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_region value eu-west-2 to Json."
+1.78801E+12,Returning the value itself
+1.78801E+12,"2026-08-29 12:23:43,916 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_submit_directory value s3://amazon-sagemaker-934912969749-eu-west-2-40xm5p8enanggl/tensorflow-training/code/tensorflow-monreader-model-20260829-121548/source.tar.gz to Json."
+1.78801E+12,Returning the value itself
+1.78801E+12,"2026-08-29 12:23:43,917 sagemaker-training-toolkit INFO     No Neurons detected (normal if no neurons installed)"
+1.78801E+12,"2026-08-29 12:23:43,950 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_program value train_sagemaker.py to Json."
+1.78801E+12,Returning the value itself
+1.78801E+12,"2026-08-29 12:23:43,950 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_region value eu-west-2 to Json."
+1.78801E+12,Returning the value itself
+1.78801E+12,"2026-08-29 12:23:43,950 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_submit_directory value s3://amazon-sagemaker-934912969749-eu-west-2-40xm5p8enanggl/tensorflow-training/code/tensorflow-monreader-model-20260829-121548/source.tar.gz to Json."
+1.78801E+12,Returning the value itself
+1.78801E+12,"2026-08-29 12:23:43,950 sagemaker-training-toolkit INFO     No Neurons detected (normal if no neurons installed)"
+1.78801E+12,"2026-08-29 12:23:43,961 sagemaker-training-toolkit INFO     Invoking user script"
+1.78801E+12,Training Env:
+1.78801E+12,"{
+    ""additional_framework_parameters"": {},
+    ""channel_input_dirs"": {
+        ""training"": ""/opt/ml/input/data/training""
+    },
+    ""current_host"": ""algo-1"",
+    ""current_instance_group"": ""homogeneousCluster"",
+    ""current_instance_group_hosts"": [
+        ""algo-1""
+    ],
+    ""current_instance_type"": ""ml.g5.xlarge"",
+    ""distribution_hosts"": [],
+    ""distribution_instance_groups"": [],
+    ""framework_module"": ""sagemaker_tensorflow_container.training:main"",
+    ""hosts"": [
+        ""algo-1""
+    ],
+    ""hyperparameters"": {
+        ""batch-size"": 64,
+        ""epochs"": 10
+    },
+    ""input_config_dir"": ""/opt/ml/input/config"",
+    ""input_data_config"": {
+        ""training"": {
+            ""TrainingInputMode"": ""File"",
+            ""S3DistributionType"": ""FullyReplicated"",
+            ""RecordWrapperType"": ""None""
+        }
+    },
+    ""input_dir"": ""/opt/ml/input"",
+    ""instance_groups"": [
+        ""homogeneousCluster""
+    ],
+    ""instance_groups_dict"": {
+        ""homogeneousCluster"": {
+            ""instance_group_name"": ""homogeneousCluster"",
+            ""instance_type"": ""ml.g5.xlarge"",
+            ""hosts"": [
+                ""algo-1""
+            ]
+        }
+    },
+    ""is_hetero"": false,
+    ""is_master"": true,
+    ""is_modelparallel_enabled"": null,
+    ""is_smddpmprun_installed"": false,
+    ""is_smddprun_installed"": false,
+    ""job_name"": ""tensorflow-monreader-model-20260829-121548"",
+    ""log_level"": 20,
+    ""master_hostname"": ""algo-1"",
+    ""model_dir"": ""/opt/ml/model"",
+    ""module_dir"": ""s3://amazon-sagemaker-934912969749-eu-west-2-40xm5p8enanggl/tensorflow-training/code/tensorflow-monreader-model-20260829-121548/source.tar.gz"",
+    ""module_name"": ""train_sagemaker"",
+    ""network_interface_name"": ""eth0"",
+    ""num_cpus"": 4,
+    ""num_gpus"": 1,
+    ""num_neurons"": 0,
+    ""output_data_dir"": ""/opt/ml/output/data"",
+    ""output_dir"": ""/opt/ml/output"",
+    ""output_intermediate_dir"": ""/opt/ml/output/intermediate"",
+    ""resource_config"": {
+        ""current_host"": ""algo-1"",
+        ""current_instance_type"": ""ml.g5.xlarge"",
+        ""current_group_name"": ""homogeneousCluster"",
+        ""hosts"": [
+            ""algo-1""
+        ],
+        ""instance_groups"": [
+            {
+                ""instance_group_name"": ""homogeneousCluster"",
+                ""instance_type"": ""ml.g5.xlarge"",
+                ""hosts"": [
+                    ""algo-1""
+                ]
+            }
+        ],
+        ""network_interface_name"": ""eth0"",
+        ""topology"": null
+    },
+    ""topology"": null,
+    ""user_entry_point"": ""train_sagemaker.py"""
+1.78801E+12,}
+1.78801E+12,Environment variables:
+1.78801E+12,"SM_HOSTS=[""algo-1""]"
+1.78801E+12,SM_NETWORK_INTERFACE_NAME=eth0
+1.78801E+12,"SM_HPS={""batch-size"":64,""epochs"":10}"
+1.78801E+12,SM_USER_ENTRY_POINT=train_sagemaker.py
+1.78801E+12,SM_FRAMEWORK_PARAMS={}
+1.78801E+12,"SM_RESOURCE_CONFIG={""current_group_name"":""homogeneousCluster"",""current_host"":""algo-1"",""current_instance_type"":""ml.g5.xlarge"",""hosts"":[""algo-1""],""instance_groups"":[{""hosts"":[""algo-1""],""instance_group_name"":""homogeneousCluster"",""instance_type"":""ml.g5.xlarge""}],""network_interface_name"":""eth0"",""topology"":null}"
+1.78801E+12,"SM_INPUT_DATA_CONFIG={""training"":{""RecordWrapperType"":""None"",""S3DistributionType"":""FullyReplicated"",""TrainingInputMode"":""File""}}"
+1.78801E+12,SM_OUTPUT_DATA_DIR=/opt/ml/output/data
+1.78801E+12,"SM_CHANNELS=[""training""]"
+1.78801E+12,SM_CURRENT_HOST=algo-1
+1.78801E+12,SM_CURRENT_INSTANCE_TYPE=ml.g5.xlarge
+1.78801E+12,SM_CURRENT_INSTANCE_GROUP=homogeneousCluster
+1.78801E+12,"SM_CURRENT_INSTANCE_GROUP_HOSTS=[""algo-1""]"
+1.78801E+12,"SM_INSTANCE_GROUPS=[""homogeneousCluster""]"
+1.78801E+12,"SM_INSTANCE_GROUPS_DICT={""homogeneousCluster"":{""hosts"":[""algo-1""],""instance_group_name"":""homogeneousCluster"",""instance_type"":""ml.g5.xlarge""}}"
+1.78801E+12,SM_DISTRIBUTION_INSTANCE_GROUPS=[]
+1.78801E+12,SM_IS_HETERO=false
+1.78801E+12,SM_MODULE_NAME=train_sagemaker
+1.78801E+12,SM_LOG_LEVEL=20
+1.78801E+12,SM_FRAMEWORK_MODULE=sagemaker_tensorflow_container.training:main
+1.78801E+12,SM_INPUT_DIR=/opt/ml/input
+1.78801E+12,SM_INPUT_CONFIG_DIR=/opt/ml/input/config
+1.78801E+12,SM_OUTPUT_DIR=/opt/ml/output
+1.78801E+12,SM_NUM_CPUS=4
+1.78801E+12,SM_NUM_GPUS=1
+1.78801E+12,SM_NUM_NEURONS=0
+1.78801E+12,SM_MODEL_DIR=/opt/ml/model
+1.78801E+12,SM_MODULE_DIR=s3://amazon-sagemaker-934912969749-eu-west-2-40xm5p8enanggl/tensorflow-training/code/tensorflow-monreader-model-20260829-121548/source.tar.gz
+1.78801E+12,"SM_TRAINING_ENV={""additional_framework_parameters"":{},""channel_input_dirs"":{""training"":""/opt/ml/input/data/training""},""current_host"":""algo-1"",""current_instance_group"":""homogeneousCluster"",""current_instance_group_hosts"":[""algo-1""],""current_instance_type"":""ml.g5.xlarge"",""distribution_hosts"":[],""distribution_instance_groups"":[],""framework_module"":""sagemaker_tensorflow_container.training:main"",""hosts"":[""algo-1""],""hyperparameters"":{""batch-size"":64,""epochs"":10},""input_config_dir"":""/opt/ml/input/config"",""input_data_config"":{""training"":{""RecordWrapperType"":""None"",""S3DistributionType"":""FullyReplicated"",""TrainingInputMode"":""File""}},""input_dir"":""/opt/ml/input"",""instance_groups"":[""homogeneousCluster""],""instance_groups_dict"":{""homogeneousCluster"":{""hosts"":[""algo-1""],""instance_group_name"":""homogeneousCluster"",""instance_type"":""ml.g5.xlarge""}},""is_hetero"":false,""is_master"":true,""is_modelparallel_enabled"":null,""is_smddpmprun_installed"":false,""is_smddprun_installed"":false,""job_name"":""tensorflow-monreader-model-20260829-121548"",""log_level"":20,""master_hostname"":""algo-1"",""model_dir"":""/opt/ml/model"",""module_dir"":""s3://amazon-sagemaker-934912969749-eu-west-2-40xm5p8enanggl/tensorflow-training/code/tensorflow-monreader-model-20260829-121548/source.tar.gz"",""module_name"":""train_sagemaker"",""network_interface_name"":""eth0"",""num_cpus"":4,""num_gpus"":1,""num_neurons"":0,""output_data_dir"":""/opt/ml/output/data"",""output_dir"":""/opt/ml/output"",""output_intermediate_dir"":""/opt/ml/output/intermediate"",""resource_config"":{""current_group_name"":""homogeneousCluster"",""current_host"":""algo-1"",""current_instance_type"":""ml.g5.xlarge"",""hosts"":[""algo-1""],""instance_groups"":[{""hosts"":[""algo-1""],""instance_group_name"":""homogeneousCluster"",""instance_type"":""ml.g5.xlarge""}],""network_interface_name"":""eth0"",""topology"":null},""topology"":null,""user_entry_point"":""train_sagemaker.py""}"
+1.78801E+12,"SM_USER_ARGS=[""--batch-size"",""64"",""--epochs"",""10""]"
+1.78801E+12,SM_OUTPUT_INTERMEDIATE_DIR=/opt/ml/output/intermediate
+1.78801E+12,SM_CHANNEL_TRAINING=/opt/ml/input/data/training
+1.78801E+12,SM_HP_BATCH-SIZE=64
+1.78801E+12,SM_HP_EPOCHS=10
+1.78801E+12,PYTHONPATH=/opt/ml/code:/opt/venv/bin:/usr/lib64/python312.zip:/usr/lib64/python3.12:/usr/lib64/python3.12/lib-dynload:/opt/venv/lib64/python3.12/site-packages:/opt/venv/lib/python3.12/site-packages
+1.78801E+12,Invoking script with the following command:
+1.78801E+12,/opt/venv/bin/python3 train_sagemaker.py --batch-size 64 --epochs 10
+1.78801E+12,"2026-08-29 12:23:43,961 sagemaker-training-toolkit INFO     Exceptions not imported for SageMaker Debugger as it is not installed."
+1.78801E+12,"'""======================================================================"""
+1.78801E+12,SAGEMAKER TENSORFLOW TRAINING
+1.78801E+12,"'""======================================================================"""
+1.78801E+12,TensorFlow version: 2.21.0
+1.78801E+12,Training directory: /opt/ml/input/data/training
+1.78801E+12,Model directory: /opt/ml/model
+1.78801E+12,"Detected GPUs: [PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]"
+1.78801E+12,Dataset
+1.78801E+12,"'""-------"""
+1.78801E+12,"X_train: (1913, 480, 270, 1)"
+1.78801E+12,"y_train: (1913,)"
+1.78801E+12,"X_val:   (479, 480, 270, 1)"
+1.78801E+12,"y_val:   (479,)"
+1.78801E+12,"Traceback (most recent call last):
+  File ""/opt/ml/code/train_sagemaker.py"", line 821, in <module>"
+1.78801E+12,train_model()
+1.78801E+12,"File ""/opt/ml/code/train_sagemaker.py"", line 270, in train_model"
+1.78801E+12,model = build_model(input_shape=X_train.shape[1:])
+1.78801E+12,^^^^^^^^^^^^^^^^^^^^^^
+1.78801E+12,^^^^^^^^^
+1.78801E+12,"^^^^^^^^^^^
+  File ""/opt/ml/code/train_sagemaker.py"", line 146, in build_model"
+1.78801E+12,"tf.keras.Conv2D(32, 3, padding=""same"", activation=""relu"", input_shape=input_shape),"
+1.78801E+12,^^^^^^^^^^^^^
+1.78801E+12,^^
+1.78801E+12,AttributeError: module 'keras._tf_keras.keras' has no attribute 'Conv2D'
+1.78801E+12,"2026-08-29 12:23:59,724 sagemaker-training-toolkit INFO     Waiting for the process to finish and give a return code."
+1.78801E+12,"2026-08-29 12:23:59,775 sagemaker-training-toolkit INFO     Done waiting for a return code. Received 1 from exiting process."
+1.78801E+12,"2026-08-29 12:23:59,776 sagemaker-training-toolkit ERROR    Reporting training FAILURE"
+1.78801E+12,"2026-08-29 12:23:59,776 sagemaker-training-toolkit ERROR    ExecuteUserScriptError:"
+1.78801E+12,ExitCode 1
+1.78801E+12,"ErrorMessage ""AttributeError: module 'keras._tf_keras.keras' has no attribute 'Conv2D'"""
+1.78801E+12,"Command ""/opt/venv/bin/python3 train_sagemaker.py --batch-size 64 --epochs 10"""
+1.78801E+12,"2026-08-29 12:23:59,776 sagemaker-training-toolkit ERROR    Encountered exit_code 1"

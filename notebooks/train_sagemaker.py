@@ -82,11 +82,16 @@ TRAINING_IMAGE_URI = f"763104351884.dkr.ecr.{REGION}.amazonaws.com/tensorflow-tr
 
 PROJECT_NAME = "tensorflow-monreader-model"
 
-# Local paths are relative to this Python file.
-PROJECT_ROOT = Path().resolve().parents[0]
+# Local paths are relative to this Python file (not the current working
+# directory, so results always land in the same place regardless of where
+# the script is launched from).
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 LOCAL_DATA_DIR = PROJECT_ROOT / "data" / "processed" / "sfm"
-LOCAL_MODEL_DIR = PROJECT_ROOT / "models" / "sfm"
+
+LOCAL_MODEL_DIR = PROJECT_ROOT / "models" / "sfm" / "aws_trained"
+# make clear distinction between locally trained and AWS trained models in terms of directory (as the identifier) when saving either locally. If in AWS directory, it is AWS trained, else it is a locally trained
+# The naming format of model_x_y will be used for either types for clarity (and cross notebook/script referencing)
 
 MODEL_NAME = "model_2_1_sm"
 
@@ -109,7 +114,7 @@ DATA_FILE = "sfm_processed_data.pkl"
 # Training parameters
 # ---------------------------------------------------------------------
 
-EPOCHS = 10
+EPOCHS = 50
 BATCH_SIZE = 64
 VALIDATION_SPLIT = 0.20  # Shouldn't need this
 
@@ -140,32 +145,34 @@ def build_model(input_shape):
     """DEFINE THE TENSORFLOW MODEL HERE."""
 
     import tensorflow as tf
+    from tensorflow.keras.models import Sequential
+    from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Dropout, BatchNormalization, GlobalAveragePooling2D
 
-    model = tf.keras.Sequential([
+    model = Sequential([
         # Input + Layer 1
-        tf.keras.Conv2D(32, 3, padding="same", activation="relu", input_shape=input_shape),
-        tf.keras.BatchNormalization(),
+        Conv2D(32, 3, padding="same", activation="relu", input_shape=input_shape),
+        BatchNormalization(),
 
         # Layer 2
-        tf.keras.Conv2D(32, 3, activation="relu"),
-        tf.keras.MaxPooling2D(),
-        tf.keras.Dropout(0.2),
+        Conv2D(32, 3, activation="relu"),
+        MaxPooling2D(),
+        Dropout(0.2),
 
         # Layer 3
-        tf.keras.Conv2D(128, 3, padding="same", activation="relu"),
-        tf.keras.BatchNormalization(),
-        tf.keras.MaxPooling2D(),
-        tf.keras.Dropout(0.2),
+        Conv2D(128, 3, padding="same", activation="relu"),
+        BatchNormalization(),
+        MaxPooling2D(),
+        Dropout(0.2),
 
-        tf.keras.GlobalAveragePooling2D(),
+        GlobalAveragePooling2D(),
 
         # Layer 4
-        tf.keras.Dense(32, activation="relu"),
-        tf.keras.BatchNormalization(),
-        tf.keras.Dropout(0.3),
+        Dense(32, activation="relu"),
+        BatchNormalization(),
+        Dropout(0.3),
 
         # Output
-        tf.keras.Dense(1, activation="sigmoid"),
+        Dense(1, activation="sigmoid"),
     ])
 
     model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy", tf.keras.metrics.Precision(name="precision"), tf.keras.metrics.Recall(name="recall"), tf.keras.metrics.AUC(name="auc")])
@@ -275,7 +282,7 @@ def train_model():
     # Callbacks
     # ---------------------------------------------------------------
 
-    callbacks = [tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True)]
+    callbacks = [tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True, verbose=1)]
 
     # ---------------------------------------------------------------
     # Train
@@ -456,6 +463,61 @@ def print_recent_log_tail(logs_client, job_name: str, max_lines: int = FAILURE_L
         label = stream_name.split("/")[-1]
         response = logs_client.get_log_events(logGroupName=LOG_GROUP_NAME, logStreamName=stream_name, limit=max_lines, startFromHead=False)
         for event in response.get("events", []): print(f"[{label}] {event['message']}")
+
+def fetch_all_log_events(logs_client, stream_name: str):
+    """Page through a CloudWatch log stream from the start and return every event."""
+    events = []
+    next_token = None
+
+    while True:
+        kwargs = {"logGroupName": LOG_GROUP_NAME, "logStreamName": stream_name, "startFromHead": True}
+        if next_token: kwargs["nextToken"] = next_token
+
+        response = logs_client.get_log_events(**kwargs)
+        page_events = response.get("events", [])
+        events.extend(page_events)
+
+        new_token = response.get("nextForwardToken")
+        if not page_events or new_token == next_token: break
+        next_token = new_token
+
+    return events
+
+def download_training_logs(logs_client, job_name: str, destination_dir: Path):
+    """Download the complete CloudWatch logs for a training job to local .log files, one per instance."""
+    from botocore.exceptions import ClientError
+
+    try:
+        streams = get_log_streams(logs_client, job_name)
+
+        if not streams:
+            print("No CloudWatch log streams were found for this job.")
+            return None
+
+        logs_dir = destination_dir / "cloudwatch_logs"
+        logs_dir.mkdir(parents=True, exist_ok=True)
+
+        print()
+        print("Downloading CloudWatch logs...")
+
+        for stream in streams:
+            stream_name = stream["logStreamName"]
+            label = stream_name.split("/")[-1]
+            events = fetch_all_log_events(logs_client, stream_name)
+
+            log_path = logs_dir / f"{label}.log"
+            with open(log_path, "w", encoding="utf-8") as file:
+                for event in events:
+                    timestamp = datetime.fromtimestamp(event["timestamp"] / 1000).strftime("%Y-%m-%d %H:%M:%S")
+                    file.write(f"[{timestamp}] {event['message']}\n")
+
+            print(f"  {log_path} ({len(events)} lines)")
+
+        return logs_dir
+
+    except ClientError as error:
+        print(f"WARNING: Unable to download CloudWatch logs ({error.response['Error']['Code']}: {error.response['Error']['Message']}).")
+        return None
 
 
 # =====================================================================
@@ -802,6 +864,12 @@ def local_workflow():
     # ---------------------------------------------------------------
 
     local_model_path = download_and_extract_model(s3_client=s3, job_name=job_name, training_description=description)
+
+    # ---------------------------------------------------------------
+    # Download CloudWatch logs
+    # ---------------------------------------------------------------
+
+    download_training_logs(logs_client=logs, job_name=job_name, destination_dir=local_model_path)
 
     print()
     print("=" * 70)

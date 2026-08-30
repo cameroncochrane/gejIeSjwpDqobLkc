@@ -1,0 +1,247 @@
+timestamp,message
+1788109421077,bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+1788109421077,bash: no job control in this shell
+1788109421077,CUDA compat package should be installed for NVIDIA driver smaller than 575.57.08
+1788109421077,Current installed NVIDIA driver version is 595.91.07
+1788109421077,Skipping CUDA compat setup as newer NVIDIA driver is installed
+1788109421077,WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+1788109421077,I0000 00:00:1788109420.672431      52 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+1788109421078,"To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags."
+1788109434080,"2026-08-30 17:03:53,857 sagemaker-training-toolkit INFO     Imported framework sagemaker_tensorflow_container.training"
+1788109434080,"2026-08-30 17:03:53,857 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_program value train_sagemaker.py to Json."
+1788109434080,Returning the value itself
+1788109434080,"2026-08-30 17:03:53,857 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_region value eu-west-2 to Json."
+1788109434080,Returning the value itself
+1788109434080,"2026-08-30 17:03:53,857 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_submit_directory value s3://amazon-sagemaker-934912969749-eu-west-2-40xm5p8enanggl/tensorflow-training/code/tensorflow-monreader-model-20260830-163627/source.tar.gz to Json."
+1788109434080,Returning the value itself
+1788109434080,"2026-08-30 17:03:53,881 sagemaker-training-toolkit INFO     No Neurons detected (normal if no neurons installed)"
+1788109434080,"2026-08-30 17:03:53,892 sagemaker-training-toolkit INFO     Provided path: /opt/ml/code  is empty, unzipping"
+1788109435080,"/opt/venv/lib64/python3.12/site-packages/sagemaker_training/files.py:142: RuntimeWarning: The default behavior of tarfile extraction has been changed to disallow common exploits (including CVE-2007-4559). By default, absolute/parent paths are disallowed and some mode bits are cleared. See https://access.redhat.com/articles/7004769 for more details.
+  t.extractall(path=path)"
+1788109435080,"2026-08-30 17:03:54,147 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_program value train_sagemaker.py to Json."
+1788109435080,Returning the value itself
+1788109435080,"2026-08-30 17:03:54,147 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_region value eu-west-2 to Json."
+1788109435080,Returning the value itself
+1788109435080,"2026-08-30 17:03:54,147 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_submit_directory value s3://amazon-sagemaker-934912969749-eu-west-2-40xm5p8enanggl/tensorflow-training/code/tensorflow-monreader-model-20260830-163627/source.tar.gz to Json."
+1788109435080,Returning the value itself
+1788109435080,"2026-08-30 17:03:54,148 sagemaker-training-toolkit INFO     No Neurons detected (normal if no neurons installed)"
+1788109435080,"2026-08-30 17:03:54,181 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_program value train_sagemaker.py to Json."
+1788109435080,Returning the value itself
+1788109435080,"2026-08-30 17:03:54,181 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_region value eu-west-2 to Json."
+1788109435080,Returning the value itself
+1788109435080,"2026-08-30 17:03:54,181 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_submit_directory value s3://amazon-sagemaker-934912969749-eu-west-2-40xm5p8enanggl/tensorflow-training/code/tensorflow-monreader-model-20260830-163627/source.tar.gz to Json."
+1788109435080,Returning the value itself
+1788109435080,"2026-08-30 17:03:54,182 sagemaker-training-toolkit INFO     No Neurons detected (normal if no neurons installed)"
+1788109435080,"2026-08-30 17:03:54,214 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_program value train_sagemaker.py to Json."
+1788109435081,Returning the value itself
+1788109435081,"2026-08-30 17:03:54,214 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_region value eu-west-2 to Json."
+1788109435081,Returning the value itself
+1788109435081,"2026-08-30 17:03:54,214 sagemaker-training-toolkit INFO     Failed to parse hyperparameter sagemaker_submit_directory value s3://amazon-sagemaker-934912969749-eu-west-2-40xm5p8enanggl/tensorflow-training/code/tensorflow-monreader-model-20260830-163627/source.tar.gz to Json."
+1788109435081,Returning the value itself
+1788109435081,"2026-08-30 17:03:54,215 sagemaker-training-toolkit INFO     No Neurons detected (normal if no neurons installed)"
+1788109435081,"2026-08-30 17:03:54,225 sagemaker-training-toolkit INFO     Invoking user script"
+1788109435081,Training Env:
+1788109435081,"{
+    ""additional_framework_parameters"": {},
+    ""channel_input_dirs"": {
+        ""training"": ""/opt/ml/input/data/training""
+    },
+    ""current_host"": ""algo-1"",
+    ""current_instance_group"": ""homogeneousCluster"",
+    ""current_instance_group_hosts"": [
+        ""algo-1""
+    ],
+    ""current_instance_type"": ""ml.g5.xlarge"",
+    ""distribution_hosts"": [],
+    ""distribution_instance_groups"": [],
+    ""framework_module"": ""sagemaker_tensorflow_container.training:main"",
+    ""hosts"": [
+        ""algo-1""
+    ],
+    ""hyperparameters"": {
+        ""batch-size"": 64,
+        ""epochs"": 50
+    },
+    ""input_config_dir"": ""/opt/ml/input/config"",
+    ""input_data_config"": {
+        ""training"": {
+            ""TrainingInputMode"": ""File"",
+            ""S3DistributionType"": ""FullyReplicated"",
+            ""RecordWrapperType"": ""None""
+        }
+    },
+    ""input_dir"": ""/opt/ml/input"",
+    ""instance_groups"": [
+        ""homogeneousCluster""
+    ],
+    ""instance_groups_dict"": {
+        ""homogeneousCluster"": {
+            ""instance_group_name"": ""homogeneousCluster"",
+            ""instance_type"": ""ml.g5.xlarge"",
+            ""hosts"": [
+                ""algo-1""
+            ]
+        }
+    },
+    ""is_hetero"": false,
+    ""is_master"": true,
+    ""is_modelparallel_enabled"": null,
+    ""is_smddpmprun_installed"": false,
+    ""is_smddprun_installed"": false,
+    ""job_name"": ""tensorflow-monreader-model-20260830-163627"",
+    ""log_level"": 20,
+    ""master_hostname"": ""algo-1"",
+    ""model_dir"": ""/opt/ml/model"",
+    ""module_dir"": ""s3://amazon-sagemaker-934912969749-eu-west-2-40xm5p8enanggl/tensorflow-training/code/tensorflow-monreader-model-20260830-163627/source.tar.gz"",
+    ""module_name"": ""train_sagemaker"",
+    ""network_interface_name"": ""eth0"",
+    ""num_cpus"": 4,
+    ""num_gpus"": 1,
+    ""num_neurons"": 0,
+    ""output_data_dir"": ""/opt/ml/output/data"",
+    ""output_dir"": ""/opt/ml/output"",
+    ""output_intermediate_dir"": ""/opt/ml/output/intermediate"",
+    ""resource_config"": {
+        ""current_host"": ""algo-1"",
+        ""current_instance_type"": ""ml.g5.xlarge"",
+        ""current_group_name"": ""homogeneousCluster"",
+        ""hosts"": [
+            ""algo-1""
+        ],
+        ""instance_groups"": [
+            {
+                ""instance_group_name"": ""homogeneousCluster"",
+                ""instance_type"": ""ml.g5.xlarge"",
+                ""hosts"": [
+                    ""algo-1""
+                ]
+            }
+        ],
+        ""network_interface_name"": ""eth0"",
+        ""topology"": null
+    },
+    ""topology"": null,
+    ""user_entry_point"": ""train_sagemaker.py"""
+1788109435081,}
+1788109435081,Environment variables:
+1788109435081,"SM_HOSTS=[""algo-1""]"
+1788109435081,SM_NETWORK_INTERFACE_NAME=eth0
+1788109435081,"SM_HPS={""batch-size"":64,""epochs"":50}"
+1788109435081,SM_USER_ENTRY_POINT=train_sagemaker.py
+1788109435081,SM_FRAMEWORK_PARAMS={}
+1788109435081,"SM_RESOURCE_CONFIG={""current_group_name"":""homogeneousCluster"",""current_host"":""algo-1"",""current_instance_type"":""ml.g5.xlarge"",""hosts"":[""algo-1""],""instance_groups"":[{""hosts"":[""algo-1""],""instance_group_name"":""homogeneousCluster"",""instance_type"":""ml.g5.xlarge""}],""network_interface_name"":""eth0"",""topology"":null}"
+1788109435081,"SM_INPUT_DATA_CONFIG={""training"":{""RecordWrapperType"":""None"",""S3DistributionType"":""FullyReplicated"",""TrainingInputMode"":""File""}}"
+1788109435081,SM_OUTPUT_DATA_DIR=/opt/ml/output/data
+1788109435081,"SM_CHANNELS=[""training""]"
+1788109435081,SM_CURRENT_HOST=algo-1
+1788109435081,SM_CURRENT_INSTANCE_TYPE=ml.g5.xlarge
+1788109435081,SM_CURRENT_INSTANCE_GROUP=homogeneousCluster
+1788109435081,"SM_CURRENT_INSTANCE_GROUP_HOSTS=[""algo-1""]"
+1788109435081,"SM_INSTANCE_GROUPS=[""homogeneousCluster""]"
+1788109435081,"SM_INSTANCE_GROUPS_DICT={""homogeneousCluster"":{""hosts"":[""algo-1""],""instance_group_name"":""homogeneousCluster"",""instance_type"":""ml.g5.xlarge""}}"
+1788109435081,SM_DISTRIBUTION_INSTANCE_GROUPS=[]
+1788109435081,SM_IS_HETERO=false
+1788109435081,SM_MODULE_NAME=train_sagemaker
+1788109435081,SM_LOG_LEVEL=20
+1788109435081,SM_FRAMEWORK_MODULE=sagemaker_tensorflow_container.training:main
+1788109435081,SM_INPUT_DIR=/opt/ml/input
+1788109435081,SM_INPUT_CONFIG_DIR=/opt/ml/input/config
+1788109435081,SM_OUTPUT_DIR=/opt/ml/output
+1788109435081,SM_NUM_CPUS=4
+1788109435081,SM_NUM_GPUS=1
+1788109435082,SM_NUM_NEURONS=0
+1788109435082,SM_MODEL_DIR=/opt/ml/model
+1788109435082,SM_MODULE_DIR=s3://amazon-sagemaker-934912969749-eu-west-2-40xm5p8enanggl/tensorflow-training/code/tensorflow-monreader-model-20260830-163627/source.tar.gz
+1788109435082,"SM_TRAINING_ENV={""additional_framework_parameters"":{},""channel_input_dirs"":{""training"":""/opt/ml/input/data/training""},""current_host"":""algo-1"",""current_instance_group"":""homogeneousCluster"",""current_instance_group_hosts"":[""algo-1""],""current_instance_type"":""ml.g5.xlarge"",""distribution_hosts"":[],""distribution_instance_groups"":[],""framework_module"":""sagemaker_tensorflow_container.training:main"",""hosts"":[""algo-1""],""hyperparameters"":{""batch-size"":64,""epochs"":50},""input_config_dir"":""/opt/ml/input/config"",""input_data_config"":{""training"":{""RecordWrapperType"":""None"",""S3DistributionType"":""FullyReplicated"",""TrainingInputMode"":""File""}},""input_dir"":""/opt/ml/input"",""instance_groups"":[""homogeneousCluster""],""instance_groups_dict"":{""homogeneousCluster"":{""hosts"":[""algo-1""],""instance_group_name"":""homogeneousCluster"",""instance_type"":""ml.g5.xlarge""}},""is_hetero"":false,""is_master"":true,""is_modelparallel_enabled"":null,""is_smddpmprun_installed"":false,""is_smddprun_installed"":false,""job_name"":""tensorflow-monreader-model-20260830-163627"",""log_level"":20,""master_hostname"":""algo-1"",""model_dir"":""/opt/ml/model"",""module_dir"":""s3://amazon-sagemaker-934912969749-eu-west-2-40xm5p8enanggl/tensorflow-training/code/tensorflow-monreader-model-20260830-163627/source.tar.gz"",""module_name"":""train_sagemaker"",""network_interface_name"":""eth0"",""num_cpus"":4,""num_gpus"":1,""num_neurons"":0,""output_data_dir"":""/opt/ml/output/data"",""output_dir"":""/opt/ml/output"",""output_intermediate_dir"":""/opt/ml/output/intermediate"",""resource_config"":{""current_group_name"":""homogeneousCluster"",""current_host"":""algo-1"",""current_instance_type"":""ml.g5.xlarge"",""hosts"":[""algo-1""],""instance_groups"":[{""hosts"":[""algo-1""],""instance_group_name"":""homogeneousCluster"",""instance_type"":""ml.g5.xlarge""}],""network_interface_name"":""eth0"",""topology"":null},""topology"":null,""user_entry_point"":""train_sagemaker.py""}"
+1788109435082,"SM_USER_ARGS=[""--batch-size"",""64"",""--epochs"",""50""]"
+1788109435082,SM_OUTPUT_INTERMEDIATE_DIR=/opt/ml/output/intermediate
+1788109435082,SM_CHANNEL_TRAINING=/opt/ml/input/data/training
+1788109435082,SM_HP_BATCH-SIZE=64
+1788109435082,SM_HP_EPOCHS=50
+1788109435082,PYTHONPATH=/opt/ml/code:/opt/venv/bin:/usr/lib64/python312.zip:/usr/lib64/python3.12:/usr/lib64/python3.12/lib-dynload:/opt/venv/lib64/python3.12/site-packages:/opt/venv/lib/python3.12/site-packages
+1788109435082,Invoking script with the following command:
+1788109435082,/opt/venv/bin/python3 train_sagemaker.py --batch-size 64 --epochs 50
+1788109435082,"2026-08-30 17:03:54,226 sagemaker-training-toolkit INFO     Exceptions not imported for SageMaker Debugger as it is not installed."
+1788109445083,'"======================================================================"
+1788109445083,SAGEMAKER TENSORFLOW TRAINING
+1788109445083,'"======================================================================"
+1788109445083,TensorFlow version: 2.21.0
+1788109445083,Training directory: /opt/ml/input/data/training
+1788109445083,Model directory: /opt/ml/model
+1788109447084,"Detected GPUs: [PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]"
+1788109449084,Dataset
+1788109449084,'"-------"
+1788109449084,"X_train: (1913, 480, 270, 1)"
+1788109449084,"y_train: (1913,)"
+1788109449084,"X_val:   (479, 480, 270, 1)"
+1788109449084,"y_val:   (479,)"
+1788109449084,"/opt/venv/lib64/python3.12/site-packages/keras/src/layers/convolutional/base_conv.py:113: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(activity_regularizer=activity_regularizer, **kwargs)"
+1788109451084,"Model: ""sequential"""
+1788109451085,┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+1788109451085,┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃
+1788109451085,┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+1788109451085,"│ conv2d (Conv2D)                 │ (None, 480, 270, 32)   │           320 │"
+1788109451085,├─────────────────────────────────┼────────────────────────┼───────────────┤
+1788109451085,"│ batch_normalization             │ (None, 480, 270, 32)   │           128 │"
+1788109451085,│ (BatchNormalization)            │                        │               │
+1788109451085,├─────────────────────────────────┼────────────────────────┼───────────────┤
+1788109451085,"│ conv2d_1 (Conv2D)               │ (None, 478, 268, 32)   │         9,248 │"
+1788109451085,├─────────────────────────────────┼────────────────────────┼───────────────┤
+1788109451085,"│ max_pooling2d (MaxPooling2D)    │ (None, 239, 134, 32)   │             0 │"
+1788109451085,├─────────────────────────────────┼────────────────────────┼───────────────┤
+1788109451085,"│ dropout (Dropout)               │ (None, 239, 134, 32)   │             0 │"
+1788109451085,├─────────────────────────────────┼────────────────────────┼───────────────┤
+1788109451085,"│ conv2d_2 (Conv2D)               │ (None, 239, 134, 128)  │        36,992 │"
+1788109451085,├─────────────────────────────────┼────────────────────────┼───────────────┤
+1788109451085,"│ batch_normalization_1           │ (None, 239, 134, 128)  │           512 │"
+1788109451085,│ (BatchNormalization)            │                        │               │
+1788109451085,├─────────────────────────────────┼────────────────────────┼───────────────┤
+1788109451085,"│ max_pooling2d_1 (MaxPooling2D)  │ (None, 119, 67, 128)   │             0 │"
+1788109451085,├─────────────────────────────────┼────────────────────────┼───────────────┤
+1788109451085,"│ dropout_1 (Dropout)             │ (None, 119, 67, 128)   │             0 │"
+1788109451085,├─────────────────────────────────┼────────────────────────┼───────────────┤
+1788109451085,"│ global_average_pooling2d        │ (None, 128)            │             0 │"
+1788109451085,│ (GlobalAveragePooling2D)        │                        │               │
+1788109451085,├─────────────────────────────────┼────────────────────────┼───────────────┤
+1788109451085,"│ dense (Dense)                   │ (None, 32)             │         4,128 │"
+1788109451085,├─────────────────────────────────┼────────────────────────┼───────────────┤
+1788109451085,"│ batch_normalization_2           │ (None, 32)             │           128 │"
+1788109451085,│ (BatchNormalization)            │                        │               │
+1788109451085,├─────────────────────────────────┼────────────────────────┼───────────────┤
+1788109451085,"│ dropout_2 (Dropout)             │ (None, 32)             │             0 │"
+1788109451085,├─────────────────────────────────┼────────────────────────┼───────────────┤
+1788109451085,"│ dense_1 (Dense)                 │ (None, 1)              │            33 │"
+1788109451085,└─────────────────────────────────┴────────────────────────┴───────────────┘
+1788109451085,"Total params: 51,489 (201.13 KB)
+ Trainable params: 51,105 (199.63 KB)
+ Non-trainable params: 384 (1.50 KB)"
+1788109451085,WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+1788109451085,W0000 00:00:1788109450.880767     108 cpu_allocator_impl.cc:82] Allocation of 991699200 exceeds 10% of free system memory.
+1788109452085,W0000 00:00:1788109451.622455     108 cpu_allocator_impl.cc:82] Allocation of 991699200 exceeds 10% of free system memory.
+1788109453085,Epoch 1/50
+1788109515116,W0000 00:00:1788109514.117605     108 cpu_allocator_impl.cc:82] Allocation of 248313600 exceeds 10% of free system memory.
+1788109515116,W0000 00:00:1788109514.312261     108 cpu_allocator_impl.cc:82] Allocation of 248313600 exceeds 10% of free system memory.
+1788109522119,30/30 - 70s - 2s/step - accuracy: 0.6618 - auc: 0.6940 - loss: 0.6417 - precision: 0.6536 - recall: 0.6459 - val_accuracy: 0.4864 - val_auc: 0.5677 - val_loss: 0.6931 - val_precision: 0.4864 - val_recall: 1.0000
+1788109522119,Epoch 2/50
+1788109528120,30/30 - 6s - 198ms/step - accuracy: 0.8113 - auc: 0.8771 - loss: 0.4483 - precision: 0.8295 - recall: 0.7696 - val_accuracy: 0.5136 - val_auc: 0.5365 - val_loss: 0.6925 - val_precision: 0.0000e+00 - val_recall: 0.0000e+00
+1788109528120,Epoch 3/50
+1788109534121,30/30 - 6s - 198ms/step - accuracy: 0.8380 - auc: 0.9001 - loss: 0.4004 - precision: 0.8671 - recall: 0.7869 - val_accuracy: 0.5136 - val_auc: 0.5368 - val_loss: 0.6942 - val_precision: 0.0000e+00 - val_recall: 0.0000e+00
+1788109534121,Epoch 4/50
+1788109540122,30/30 - 6s - 199ms/step - accuracy: 0.8291 - auc: 0.9031 - loss: 0.3921 - precision: 0.8575 - recall: 0.7772 - val_accuracy: 0.5136 - val_auc: 0.6498 - val_loss: 0.7130 - val_precision: 0.0000e+00 - val_recall: 0.0000e+00
+1788109540122,Epoch 5/50
+1788109546123,30/30 - 6s - 198ms/step - accuracy: 0.8500 - auc: 0.9126 - loss: 0.3827 - precision: 0.8733 - recall: 0.8084 - val_accuracy: 0.5136 - val_auc: 0.6495 - val_loss: 0.7293 - val_precision: 0.0000e+00 - val_recall: 0.0000e+00
+1788109546123,Epoch 6/50
+1788109552124,30/30 - 6s - 198ms/step - accuracy: 0.8610 - auc: 0.9404 - loss: 0.3166 - precision: 0.8754 - recall: 0.8321 - val_accuracy: 0.5136 - val_auc: 0.5981 - val_loss: 0.7664 - val_precision: 0.0000e+00 - val_recall: 0.0000e+00
+1788109552124,Epoch 7/50
+1788109558125,30/30 - 6s - 198ms/step - accuracy: 0.8798 - auc: 0.9479 - loss: 0.3008 - precision: 0.9059 - recall: 0.8396 - val_accuracy: 0.5136 - val_auc: 0.7491 - val_loss: 0.8440 - val_precision: 0.0000e+00 - val_recall: 0.0000e+00
+1788109558125,Epoch 7: early stopping
+1788109558125,Restoring model weights from the end of the best epoch: 2.
+1788109558125,Model saved to: /opt/ml/model/model_2_1_sm.keras
+1788109558125,Training history saved to: /opt/ml/model/model_2_1_sm_history.json
+1788109558125,Training complete.
+1788109561126,"2026-08-30 17:06:00,827 sagemaker-training-toolkit INFO     Waiting for the process to finish and give a return code."
+1788109561126,"2026-08-30 17:06:00,986 sagemaker-training-toolkit INFO     Done waiting for a return code. Received 0 from exiting process."
+1788109561126,"2026-08-30 17:06:00,986 sagemaker_tensorflow_container.training WARNING  Your model will NOT be servable with SageMaker TensorFlow Serving container. The model artifact was not saved in the TensorFlow SavedModel directory structure:"
+1788109561126,https://www.tensorflow.org/guide/saved_model#structure_of_a_savedmodel_directory
+1788109561126,"2026-08-30 17:06:00,986 sagemaker-training-toolkit INFO     Reporting training SUCCESS"

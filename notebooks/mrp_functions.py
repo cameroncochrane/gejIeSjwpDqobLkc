@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import pickle
+import json
 import cv2
 
 import numpy as np
@@ -70,7 +71,8 @@ def load_model(model_name, model_dir):
     model_name : str
         Base name of the model (without extension).
     model_dir : str or Path
-        Directory containing the model (.keras) and history (_history.pkl) files.
+        Directory containing the model (.keras) and history
+        (_history.pkl or _history.json) files.
 
     Returns
     -------
@@ -86,24 +88,31 @@ def load_model(model_name, model_dir):
 
     model_dir = Path(model_dir)
     model_path = model_dir / f"{model_name}.keras"
-    history_path = model_dir / f"{model_name}_history.pkl"
+    history_pkl_path = model_dir / f"{model_name}_history.pkl"
+    history_json_path = model_dir / f"{model_name}_history.json"
 
     model = tf.keras.models.load_model(model_path)
     print(f"Loaded model from '{model_path}'")
 
     history_dict = None
-    if history_path.exists():
-        with open(history_path, "rb") as f:
+    if history_pkl_path.exists():
+        with open(history_pkl_path, "rb") as f:
             history_dict = pickle.load(f)
-        print(f"Loaded history from '{history_path}'")
+        print(f"Loaded history from '{history_pkl_path}'")
+    elif history_json_path.exists():
+        with open(history_json_path, "r") as f:
+            history_dict = json.load(f)
+        print(f"Loaded history from '{history_json_path}'")
     else:
-        print(f"No history file found at '{history_path}'")
+        print(f"No history file found at '{history_pkl_path}' or '{history_json_path}'")
 
     return model, history_dict
 
 
 #############################################################################################################
 # Data shuffling + generation:
+
+### Function for transforming images from raw to appropriate (H x W x 1) (and downscaled) matrices?? ###
 
 def shuffle_training_data(X_train, y_train, random_state=13):
     """
@@ -392,6 +401,7 @@ def evaluate_model(model,X_test,y_test,class_names=("Class 0", "Class 1"),plot_n
         "predicted_probabilities": y_pred_probs
     }
 
+# Add function here regarding full execution  of eval functions above with model/history input error handling
 
 #############################################################################################################
 # Saving models + history objects:
