@@ -15,7 +15,7 @@ aws sagemaker stop-training-job `
 
 CHECK JOBS
 -----------
-aws sagemaker list-training-jobs `--max-results 5 `--region eu-west-2 `
+aws sagemaker list-training-jobs
 
 RUN JOB
 --------
