@@ -16,4 +16,12 @@ aws sagemaker stop-training-job `
 CHECK JOBS
 -----------
 aws sagemaker list-training-jobs `--max-results 5 `--region eu-west-2 `
+
+RUN JOB
+--------
+Using new data (upload):
+    python train_sagemaker.py
+
+Without data re-upload:
+    python train_sagemaker.py --skip-data-upload
      

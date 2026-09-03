@@ -9,6 +9,10 @@ Run from Windows:
 
     python train_sagemaker.py
 
+Run from Mac:
+
+    python3 train_sagemaker.py
+
 The script will:
 
 1. Authenticate using your existing AWS credentials/profile.
@@ -93,7 +97,7 @@ LOCAL_MODEL_DIR = PROJECT_ROOT / "models" / "sfm" / "aws_trained"
 # make clear distinction between locally trained and AWS trained models in terms of directory (as the identifier) when saving either locally. If in AWS directory, it is AWS trained, else it is a locally trained
 # The naming format of model_x_y will be used for either types for clarity (and cross notebook/script referencing)
 
-MODEL_NAME = "model_2_1_sm"
+MODEL_NAME = "model_2_2"
 
 MODEL_FILENAME = MODEL_NAME + ".keras"
 HISTORY_FILENAME = MODEL_NAME + "_history.json"
@@ -145,11 +149,38 @@ def build_model(input_shape):
     """DEFINE THE TENSORFLOW MODEL HERE."""
 
     import tensorflow as tf
+    # CNN layers
     from tensorflow.keras.models import Sequential
-    from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Dropout, BatchNormalization, GlobalAveragePooling2D
+    from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Dropout, BatchNormalization, GlobalAveragePooling2D, Input
+    # Data Augmentation:
+    from tensorflow.keras.layers import RandomRotation, RandomTranslation, RandomZoom, RandomContrast, GaussianNoise
+
+    data_augmentation = Sequential([
+    
+        # Small camera/book rotation (~±3.6 degrees)
+        RandomRotation(factor=0.01,fill_mode="reflect"),
+
+        # Move image slightly vertically/horizontally
+        RandomTranslation(height_factor=0.05,width_factor=0.05,fill_mode="reflect"),
+
+        # Slight variation in camera distance
+        RandomZoom(height_factor=(-0.05, 0.05), width_factor=(-0.05, 0.05), fill_mode="reflect"),
+
+        # Small contrast variation
+        RandomContrast(factor=0.10),
+
+        # Simulate small amounts of camera/sensor noise
+        GaussianNoise(stddev=0.015)
+        ])
 
     model = Sequential([
-        # Input + Layer 1
+        # Input
+        Input(shape=input_shape),
+
+        # Data Augmentation (defined above)
+        data_augmentation,
+
+        # Layer 1
         Conv2D(32, 3, padding="same", activation="relu", input_shape=input_shape),
         BatchNormalization(),
 
@@ -172,8 +203,8 @@ def build_model(input_shape):
         Dropout(0.3),
 
         # Output
-        Dense(1, activation="sigmoid"),
-    ])
+        Dense(1, activation="sigmoid")
+        ])
 
     model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy", tf.keras.metrics.Precision(name="precision"), tf.keras.metrics.Recall(name="recall"), tf.keras.metrics.AUC(name="auc")])
 
