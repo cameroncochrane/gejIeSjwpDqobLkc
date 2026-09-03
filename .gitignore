@@ -5,6 +5,9 @@ data/*
 # Mac OS-specific storage files
 .DS_Store
 
+#vscode settings
+.vscode
+
 # vim
 *.swp
 *.swo
