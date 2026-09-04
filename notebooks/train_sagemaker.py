@@ -122,7 +122,7 @@ EPOCHS = 50
 BATCH_SIZE = 64
 VALIDATION_SPLIT = 0.20  # Shouldn't need this
 
-# How frequently your Windows script checks SageMaker.
+# How frequently your Script checks SageMaker.
 STATUS_POLL_SECONDS = 20
 
 # CloudWatch log group SageMaker publishes container stdout/stderr to.
