@@ -97,7 +97,7 @@ LOCAL_MODEL_DIR = PROJECT_ROOT / "models" / "sfm" / "aws_trained"
 # make clear distinction between locally trained and AWS trained models in terms of directory (as the identifier) when saving either locally. If in AWS directory, it is AWS trained, else it is a locally trained
 # The naming format of model_x_y will be used for either types for clarity (and cross notebook/script referencing)
 
-MODEL_NAME = "model_3"
+MODEL_NAME = "model_3_2_2"
 
 MODEL_FILENAME = MODEL_NAME + ".keras"
 HISTORY_FILENAME = MODEL_NAME + "_history.json"
@@ -111,14 +111,14 @@ HISTORY_FILENAME = MODEL_NAME + "_history.json"
 #
 # If validation arrays aren't present, validation_split is used.
 
-
-DATA_FILE = "sfm_processed_data.pkl"
+DATA_FILE = "sfm_processed_data_gray.pkl"
 
 # ---------------------------------------------------------------------
 # Training parameters
 # ---------------------------------------------------------------------
 
-EPOCHS = 50
+EPOCHS = 100
+PATIENCE = 10
 BATCH_SIZE = 64
 VALIDATION_SPLIT = 0.20  # Shouldn't need this
 
@@ -330,7 +330,7 @@ def train_model():
     # Callbacks
     # ---------------------------------------------------------------
 
-    callbacks = [tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True, verbose=1)]
+    callbacks = [tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=PATIENCE, restore_best_weights=True, verbose=1)]
 
     # ---------------------------------------------------------------
     # Train

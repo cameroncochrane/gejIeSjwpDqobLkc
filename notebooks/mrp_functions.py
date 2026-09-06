@@ -14,119 +14,80 @@ from sklearn.metrics import confusion_matrix, classification_report, f1_score, C
 
 import tensorflow as tf
 
-
 #############################################################################################################
-# Loading data + models:
+# Load raw images
 
-def load_pickle_data(data_dir):
+def load_images_to_df(image_dir, label=None, label_from_subdir=True, split=None):
     """
-    Load all pickle files from a directory into a dictionary.
+    Load images into a DataFrame using cv2.imread.
 
-    Parameters
-    ----------
-    data_dir : str or pathlib.Path
-        Directory containing the pickle files. Only files with a `.pkl`
-        extension directly within this directory are loaded.
+    Images are converted from OpenCV's BGR format to RGB.
 
-    Returns
-    -------
-    dict
-        Dictionary mapping each pickle file's stem (filename without the
-        `.pkl` extension) to its deserialized contents.
+    Example:
+    ---------
+    >>> raw_training = load_images_to_df(image_dir=TRAIN_DATA_DIR,label=False,label_from_subdir=True,split='training')
 
-    Notes
-    -----
-    Files are loaded in the order returned by `Path.glob()`. If multiple
-    files have the same stem, the last loaded file overwrites earlier
-    entries.
-
-    Prints
-    ------
-    None
-        Prints the number of loaded files and their dictionary keys.
-    
-    Example
-    -------
-    >>> SFM_DATA_DIR = "a/directory/is/here/"
-    >>> pkl_data = load_pickle_data(SFM_DATA_DIR)
+    >>> raw_testing = load_images_to_df(image_dir=TEST_DATA_DIR,label=False,label_from_subdir=True,split='testing')
     """
-    data_dir = Path(data_dir)
-    pkl_data = {}
+    ALLOWED_EXTS = {'.jpg', '.jpeg', '.png', '.bmp', '.tif', '.tiff', '.gif'}
+    records = []
+    image_dir = Path(image_dir)
 
-    for pkl_file in data_dir.glob("*.pkl"):
-        with pkl_file.open("rb") as file:
-            pkl_data[pkl_file.stem] = pickle.load(file)
+    if not image_dir.is_dir():
+        return pd.DataFrame(records)
 
-    print(f"Loaded {len(pkl_data)} pickle files:")
-    print(list(pkl_data))
+    def _load_from_dir(directory, lbl):
+        for root_dir, _, files in os.walk(directory):
+            for fname in sorted(files):
+                path = os.path.join(root_dir, fname)
 
-    return pkl_data
+                if Path(fname).suffix.lower() not in ALLOWED_EXTS:
+                    continue
 
-def load_model(model_name, model_dir):
-    """
-    Load a Keras model and its associated training history from disk.
+                image = cv2.imread(path, cv2.IMREAD_COLOR)
+                if image is None:
+                    continue
 
-    Parameters
-    ----------
-    model_name : str
-        Base name of the model (without extension).
-    model_dir : str or Path
-        Directory containing the model (.keras) and history
-        (_history.pkl or _history.json) files.
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                records.append({
+                    'image': image,
+                    'label': lbl,
+                    'split': split
+                })
 
-    Returns
-    -------
-    tuple
-        (model, history_dict) where model is the loaded Keras model and 
-        history_dict is the loaded training history (or None if not found).
-    
-    Example
-    -------
-    >>> SFM_MODELS_DIR = "a/directory/containing/models/and/history"
-    >>> trained_model,trained_model_history =  load_model("model_1", SFM_MODELS_DIR)
-    """
+    if label_from_subdir:
+        subdirs = [
+            d for d in sorted(os.listdir(image_dir))
+            if (image_dir / d).is_dir()
+        ]
 
-    model_dir = Path(model_dir)
-    model_path = model_dir / f"{model_name}.keras"
-    history_pkl_path = model_dir / f"{model_name}_history.pkl"
-    history_json_path = model_dir / f"{model_name}_history.json"
-
-    model = tf.keras.models.load_model(model_path)
-    print(f"Loaded model from '{model_path}'")
-
-    history_dict = None
-    if history_pkl_path.exists():
-        with open(history_pkl_path, "rb") as f:
-            history_dict = pickle.load(f)
-        print(f"Loaded history from '{history_pkl_path}'")
-    elif history_json_path.exists():
-        with open(history_json_path, "r") as f:
-            history_dict = json.load(f)
-        print(f"Loaded history from '{history_json_path}'")
+        if subdirs:
+            for subdir in subdirs:
+                _load_from_dir(image_dir / subdir, subdir)
+        else:
+            _load_from_dir(image_dir, label)
     else:
-        print(f"No history file found at '{history_pkl_path}' or '{history_json_path}'")
+        _load_from_dir(image_dir, label)
 
-    return model, history_dict
+    return pd.DataFrame(records)
 
 
 #############################################################################################################
-# Data shuffling + generation:
+# Data shuffling + processing:
 
-### Function for transforming images from raw to appropriate (H x W x 1) (and downscaled) matrices?? ###
-
-def shuffle_training_data(X_train, y_train, random_state=13):
+def shuffle_data(X_sample, y_sample, random_state=13):
     """
-    Randomly shuffle training samples and their corresponding labels.
+    Randomly shuffle samples and their corresponding labels.
 
     The same permutation is applied to both inputs so that each feature
     sample remains paired with its original label.
 
     Parameters
     ----------
-    X_train : array-like
+    X_sample : array-like
         Training features or images. The first dimension represents samples.
-    y_train : array-like
-        Training labels corresponding to `X_train`.
+    y_sample : array-like
+        Labels corresponding to `X_sample`.
     random_state : int or None, default=13
         Seed used to make the shuffle reproducible. Set to ``None`` for
         non-deterministic shuffling.
@@ -141,17 +102,17 @@ def shuffle_training_data(X_train, y_train, random_state=13):
     Raises
     ------
     ValueError
-        If `X_train` and `y_train` contain different numbers of samples.
+        If `X_sample` and `y_sample` contain different numbers of samples.
 
     Example
     -------
-    >>> X_train, y_train = shuffle_training_data(X_train, y_train)
+    >>> X_train, y_train = shuffle_data(X_train, y_train)
     """
     
-    if len(X_train) != len(y_train):
-        raise ValueError("X_train and y_train must contain the same number of samples.")
+    if len(X_sample) != len(y_sample):
+        raise ValueError("X_sample and y_sample must contain the same number of samples.")
 
-    return shuffle(X_train, y_train, random_state=random_state)
+    return shuffle(X_sample, y_sample, random_state=random_state)
 
 def create_validation_set(X_train,y_train,val_size=0.2,random_state=13,stratify=True):
     """
@@ -219,7 +180,77 @@ def create_validation_set(X_train,y_train,val_size=0.2,random_state=13,stratify=
 
     return X_train_new, X_val, y_train_new, y_val
 
-def enhance_image(image):
+def convert_images_to_grayscale(df):
+    """
+    Return a copy of df with images converted from RGB to grayscale.
+    """
+    grayscale_df = df.copy()
+    grayscale_df["image"] = grayscale_df["image"].map(
+        lambda image: cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+    )
+    return grayscale_df
+
+def resize_image(image, scale_factor=0.5):
+    """
+    Resize a grayscale image by a fixed scale factor while preserving aspect ratio.
+    """
+    height, width = image.shape[:2]
+    new_width = max(1, int(width * scale_factor))
+    new_height = max(1, int(height * scale_factor))
+
+    return cv2.resize(image, (new_width, new_height), interpolation=cv2.INTER_AREA)
+
+def resize_images_in_df(df, scale_factor=0.5):
+    """
+    Return a copy of df with all images resized by scale_factor.
+    """
+    resized_df = df.copy()
+    resized_df["image"] = resized_df["image"].map(
+        lambda image: resize_image(image, scale_factor)
+    )
+    return resized_df
+
+def add_grayscale_channel(df):
+    """
+    Return a copy of the DataFrame with grayscale images shaped as
+    (height, width, 1) for TensorFlow models. 
+    
+    Try to use after resizing the image. Hasn't been tried without resizing.
+    """
+    channel_df = df.copy()
+    channel_df["image"] = channel_df["image"].map(
+        lambda image: image[..., np.newaxis]
+        if image.ndim == 2
+        else image
+    )
+    return channel_df
+
+def normalize_images(images):
+    """Normalize image pixel values to the range [0, 1] as float32."""
+    return images.map(lambda image: image.astype(np.float32) / 255.0)
+
+def encode_labels(labels):
+    """Encode 'flip' as 1 and all other labels as 0."""
+    return labels.map(lambda label: 1 if label == "flip" else 0)
+
+def series_to_numpy(series, stack=False):
+    """
+    Convert a pandas Series to a NumPy array.
+
+    Set stack=True when each Series element is a NumPy array, such as an image.
+
+    Example:
+    ---------
+    >>> X_train = series_to_numpy(X_train, stack=True)
+    >>> X_test = series_to_numpy(X_test, stack=True)
+
+    >>> y_train = series_to_numpy(y_train)
+    >>> y_test = series_to_numpy(y_test)
+    """
+    values = series.to_numpy()
+    return np.stack(values) if stack else values
+
+def enhance_image(image, dual_channel=False):
     """
     Apply Sobel edge detection to a grayscale image.
 
@@ -227,12 +258,16 @@ def enhance_image(image):
     ----------
     image : np.ndarray
         Grayscale image with shape (H, W, 1).
+    dual_channel : bool, optional
+        If True, return both the grayscale and enhanced Sobel images as
+        channels. Otherwise, return only the enhanced Sobel image.
 
     Returns
     -------
     np.ndarray
-        Sobel edge-magnitude image with shape (H, W, 1),
-        dtype float32 and values normalized to [0, 1].
+        Sobel edge-magnitude image with shape (H, W, 1), or, when
+        ``dual_channel`` is True, an image with shape (H, W, 2) containing
+        the grayscale and Sobel channels. The result has dtype float32.
     
     Example
     -------
@@ -240,7 +275,7 @@ def enhance_image(image):
     >>> enh_img = enhance_image(img)
     """
 
-    # Convert (H, W, 1) -> (H, W)
+    # Convert (H, W, 1) -> (H, W), preserving the grayscale values.
     img = np.squeeze(image).astype(np.float32)
 
     # Calculate horizontal and vertical intensity gradients
@@ -260,9 +295,13 @@ def enhance_image(image):
     # Restore channel dimension: (H, W) -> (H, W, 1)
     edges = edges[..., np.newaxis]
 
+    if dual_channel:
+        grayscale = img[..., np.newaxis]
+        return np.concatenate((grayscale, edges), axis=-1).astype(np.float32)
+
     return edges.astype(np.float32)
 
-def enhance_dataset(X):
+def enhance_dataset(X, dual_channel=False):
     """
     Apply Sobel edge detection function, enhance_image(), to every image in a dataset.
 
@@ -270,20 +309,24 @@ def enhance_dataset(X):
     ----------
     X : np.ndarray
         Image dataset with shape (N, H, W, 1).
+    dual_channel : bool, optional
+        Forwarded to ``enhance_image``. If True, retain the original
+        grayscale channel alongside the Sobel edge channel.
 
     Returns
     -------
     np.ndarray
-        Sobel-transformed dataset with shape (N, H, W, 1),
+        Sobel-transformed dataset with shape (N, H, W, 1), or shape
+        (N, H, W, 2) when ``dual_channel`` is True,
         dtype float32 and individual images normalized to [0, 1].
     
     Example
     --------
-    >>> X_train_enh = enahnce_dataset(X_train)
+    >>> X_train_enh = enhance_dataset(X_train)
     """
 
     return np.stack([
-        enhance_image(image)
+        enhance_image(image, dual_channel=dual_channel)
         for image in X
     ]).astype(np.float32)
 
@@ -462,4 +505,97 @@ def save_model(file_path, model, history=None):
 
         print(f"Saved history to '{history_path}'")
 
+
+#############################################################################################################
+# Loading pkl data + models:
+
+def load_pickle_data(data_dir):
+    """
+    Load all pickle files from a directory into a dictionary.
+
+    Parameters
+    ----------
+    data_dir : str or pathlib.Path
+        Directory containing the pickle files. Only files with a `.pkl`
+        extension directly within this directory are loaded.
+
+    Returns
+    -------
+    dict
+        Dictionary mapping each pickle file's stem (filename without the
+        `.pkl` extension) to its deserialized contents.
+
+    Notes
+    -----
+    Files are loaded in the order returned by `Path.glob()`. If multiple
+    files have the same stem, the last loaded file overwrites earlier
+    entries.
+
+    Prints
+    ------
+    None
+        Prints the number of loaded files and their dictionary keys.
+    
+    Example
+    -------
+    >>> SFM_DATA_DIR = "a/directory/is/here/"
+    >>> pkl_data = load_pickle_data(SFM_DATA_DIR)
+    """
+    data_dir = Path(data_dir)
+    pkl_data = {}
+
+    for pkl_file in data_dir.glob("*.pkl"):
+        with pkl_file.open("rb") as file:
+            pkl_data[pkl_file.stem] = pickle.load(file)
+
+    print(f"Loaded {len(pkl_data)} pickle files:")
+    print(list(pkl_data))
+
+    return pkl_data
+
+def load_model(model_name, model_dir):
+    """
+    Load a Keras model and its associated training history from disk.
+
+    Parameters
+    ----------
+    model_name : str
+        Base name of the model (without extension).
+    model_dir : str or Path
+        Directory containing the model (.keras) and history
+        (_history.pkl or _history.json) files.
+
+    Returns
+    -------
+    tuple
+        (model, history_dict) where model is the loaded Keras model and 
+        history_dict is the loaded training history (or None if not found).
+    
+    Example
+    -------
+    >>> SFM_MODELS_DIR = "a/directory/containing/models/and/history"
+    >>> trained_model,trained_model_history =  load_model("model_1", SFM_MODELS_DIR)
+    """
+
+    model_dir = Path(model_dir)
+    model_path = model_dir / f"{model_name}.keras"
+    history_pkl_path = model_dir / f"{model_name}_history.pkl"
+    history_json_path = model_dir / f"{model_name}_history.json"
+
+    model = tf.keras.models.load_model(model_path)
+    print(f"Loaded model from '{model_path}'")
+
+    history_dict = None
+    if history_pkl_path.exists():
+        with open(history_pkl_path, "rb") as f:
+            history_dict = pickle.load(f)
+        print(f"Loaded history from '{history_pkl_path}'")
+    elif history_json_path.exists():
+        with open(history_json_path, "r") as f:
+            history_dict = json.load(f)
+        print(f"Loaded history from '{history_json_path}'")
+    else:
+        print(f"No history file found at '{history_pkl_path}' or '{history_json_path}'")
+
+    return model, history_dict
 
