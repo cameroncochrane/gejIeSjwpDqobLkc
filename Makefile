@@ -57,10 +57,19 @@ create_environment:
 #################################################################################
 
 
-## Make dataset
+## Make dataset for both pipelines
 .PHONY: data
-data: requirements
-	$(PYTHON_INTERPRETER) monreader/dataset.py
+data: data-sfm data-cm
+
+## Make dataset for the single-frame (sfm) pipeline
+.PHONY: data-sfm
+data-sfm: requirements
+	$(PYTHON_INTERPRETER) monreader/sfm/dataset.py
+
+## Make dataset for the whole-clip (cm) pipeline
+.PHONY: data-cm
+data-cm: requirements
+	$(PYTHON_INTERPRETER) monreader/cm/dataset.py
 
 
 #################################################################################

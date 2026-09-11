@@ -89,7 +89,9 @@ PROJECT_NAME = "tensorflow-monreader-model"
 # Local paths are relative to this Python file (not the current working
 # directory, so results always land in the same place regardless of where
 # the script is launched from).
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+# This file lives at monreader/utils/train_sagemaker.py, so the project root
+# is three levels up.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 LOCAL_DATA_DIR = PROJECT_ROOT / "data" / "processed" / "sfm"
 

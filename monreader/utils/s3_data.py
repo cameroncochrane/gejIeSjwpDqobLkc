@@ -67,8 +67,3 @@ def download_from_s3(bucket_name, s3_key, local_path, profile_name=None):
     )
 
     print(f"Downloaded: s3://{bucket_name}/{s3_key} -> {local_path}")
-
-
-#### USAGE ####
-# Be careful, the code below is executed if this script is imported to use the functions above. THis could mean the repetitive and long
-# downloaed of any S3 objects listed here!

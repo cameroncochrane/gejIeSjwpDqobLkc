@@ -4,7 +4,7 @@ from loguru import logger
 from tqdm import tqdm
 import typer
 
-from monreader.config import MODELS_DIR, PROCESSED_DATA_DIR
+from monreader.cm.config import MODELS_DIR, PROCESSED_DATA_DIR
 
 app = typer.Typer()
 

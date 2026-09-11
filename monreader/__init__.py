@@ -1,1 +1,1 @@
-from monreader import config  # noqa: F401
+"""MonReader: page-flip detection, split into the sfm and cm modeling pipelines."""
