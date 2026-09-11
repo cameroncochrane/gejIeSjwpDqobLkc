@@ -2,6 +2,9 @@
 data/
 data/*
 
+# AI related:
+.claude
+
 # Mac OS-specific storage files
 .DS_Store
 
