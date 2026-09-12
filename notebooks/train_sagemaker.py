@@ -97,7 +97,7 @@ LOCAL_MODEL_DIR = PROJECT_ROOT / "models" / "sfm" / "aws_trained"
 # make clear distinction between locally trained and AWS trained models in terms of directory (as the identifier) when saving either locally. If in AWS directory, it is AWS trained, else it is a locally trained
 # The naming format of model_x_y will be used for either types for clarity (and cross notebook/script referencing)
 
-MODEL_NAME = "model_3_2_2"
+MODEL_NAME = "model_3_2_3"
 
 MODEL_FILENAME = MODEL_NAME + ".keras"
 HISTORY_FILENAME = MODEL_NAME + "_history.json"
@@ -118,7 +118,8 @@ DATA_FILE = "sfm_processed_data_gray.pkl"
 # ---------------------------------------------------------------------
 
 EPOCHS = 100
-PATIENCE = 10
+ES_PATIENCE = 10
+RLR_PATIENCE = 10
 BATCH_SIZE = 64
 VALIDATION_SPLIT = 0.20  # Shouldn't need this
 
@@ -336,8 +337,18 @@ def train_model():
     # ---------------------------------------------------------------
 
     callbacks = [tf.keras.callbacks.EarlyStopping(monitor="val_loss", 
-                                                  patience=PATIENCE, 
-                                                  restore_best_weights=True, verbose=1)]
+                                                  patience=ES_PATIENCE, 
+                                                  restore_best_weights=True, verbose=1),
+                                                  tf.keras.callbacks.ReduceLROnPlateau(
+                                                                        monitor="val_loss",
+                                                                        factor=0.5,
+                                                                        patience=RLR_PATIENCE,
+                                                                        min_lr=1e-6,
+                                                                        cooldown=1,
+                                                                        verbose=1)
+    ]
+                                                                
+                                                                    
 
     # ---------------------------------------------------------------
     # Train

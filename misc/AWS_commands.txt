@@ -6,6 +6,9 @@ PROJECT_BUCKET:
 ----------------
 amazon-sagemaker-934912969749-eu-west-2-40xm5p8enanggl
 
+# The S3 bucket has 'Block public access' set to ON so any attempts by an unauthorised user to acccess it will be futile from a security perspective
+
+
 STOP JOB
 ----------
 aws sagemaker stop-training-job `
