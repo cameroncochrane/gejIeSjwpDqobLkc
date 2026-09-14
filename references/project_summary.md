@@ -71,15 +71,5 @@
 
 ## 9. Where CM (Clip Method) Stands
 
-- `CM_NB_6.ipynb` has been created but is essentially just a title — **CM work hasn't really started yet**.
-- Open design questions to raise in the meeting:
-  - How to aggregate a clip's frames into one training example (e.g. sequence model over frames vs. some pooled/aggregated feature representation)?
-  - Can we reuse the SFM grayscale preprocessing pipeline as a first stage?
-  - Given SFM alone is already hitting ~99% F1, what's the actual value case for CM — is it worth the added complexity, or does it become more of a robustness/secondary-signal check?
-
-## 10. Suggested Discussion Points for the Meeting
-
-- Confirm `model_3_2_3` as the SFM model to move forward with (or productionize) given the ~99% F1 result.
-- Agree on CM's scope and priority — is it still needed given SFM's performance?
-- Any remaining local-hardware constraints now that AWS SageMaker training is the standard workflow?
-- Review/align on the repo structure (`sfm` / `cm` / `utils` split) so both of you are working from the same conventions going forward.
+- Currently in the plnning and theory learning stage.
+- Is it needed based on how well the final SFM model performs?
