@@ -1,30 +1,25 @@
+# CCDS Specific imports:
 from pathlib import Path
-
 from loguru import logger
 from tqdm import tqdm
 import typer
 
-from monreader.sfm.config import MODELS_DIR, PROCESSED_DATA_DIR
+# Imports from monreader:
+from monreader.sfm.config import SFM_MODELS_DIR, PROCESSED_DATA_DIR
+from monreader.utils import train_sagemaker
 
+# Library imports:
+import runpy
+
+# Main script
 app = typer.Typer()
-
-
 @app.command()
 def main(
-    # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
-    features_path: Path = PROCESSED_DATA_DIR / "features.csv",
-    labels_path: Path = PROCESSED_DATA_DIR / "labels.csv",
-    model_path: Path = MODELS_DIR / "model.pkl",
-    # -----------------------------------------
+    # Main parameters e.g. model, job, and data names are defined in monreader.utils.train_sagemaker.py
 ):
-    # ---- REPLACE THIS WITH YOUR OWN CODE ----
-    logger.info("Training some model...")
-    for i in tqdm(range(10), total=10):
-        if i == 5:
-            logger.info("Something happened for iteration 5.")
-    logger.success("Modeling training complete.")
-    # -----------------------------------------
-
+    # Execute the 'train_sagemaker.py' script located in the utils folder
+    runpy.run_module("monreader.utils.train_sagemaker", run_name="__main__")
+    
 
 if __name__ == "__main__":
     app()

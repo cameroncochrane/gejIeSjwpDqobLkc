@@ -1,29 +1,21 @@
+# CCDS Specific imports:
 from pathlib import Path
-
 from loguru import logger
 from tqdm import tqdm
 import typer
 
-from monreader.sfm.config import MODELS_DIR, PROCESSED_DATA_DIR
+# Imports from monreader:
+from monreader.sfm.config import MODELS_DIR, PROCESSED_DATA_DIR, SFM_MODELS_DIR
+from monreader.utils.mrp_functions import load_model, load_pickle_data, evaluate_model, plot_training_history
 
+# Main script
 app = typer.Typer()
-
-
 @app.command()
 def main(
-    # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
-    features_path: Path = PROCESSED_DATA_DIR / "test_features.csv",
-    model_path: Path = MODELS_DIR / "model.pkl",
-    predictions_path: Path = PROCESSED_DATA_DIR / "test_predictions.csv",
-    # -----------------------------------------
+    data_path: Path = PROCESSED_DATA_DIR / "sfm_processed_data_gray.pkl",
+    model_directory: Path = SFM_MODELS_DIR / "aws_trained" / "monreader_model"
 ):
-    # ---- REPLACE THIS WITH YOUR OWN CODE ----
-    logger.info("Performing inference for model...")
-    for i in tqdm(range(10), total=10):
-        if i == 5:
-            logger.info("Something happened for iteration 5.")
-    logger.success("Inference complete.")
-    # -----------------------------------------
+    return None
 
 
 if __name__ == "__main__":

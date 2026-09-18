@@ -14,8 +14,50 @@ from sklearn.metrics import confusion_matrix, classification_report, f1_score, C
 
 import tensorflow as tf
 
+from monreader.sfm.config import SFM_FIGURES_DIR
+
 #############################################################################################################
-# Load raw images
+# Count + Load raw images
+def count_frames_per_clip(data_dir) -> pd.DataFrame:
+    """
+    Count frames per clip in the dataset.
+
+    Expects: data_dir / <split> / <label> / <VideoID>_<FrameNumber>.jpg
+    e.g.     data/raw / training  / flip   / 0001_000000020.jpg
+
+    VideoID numbering resets inside each (split, label) folder, so a clip is
+    only uniquely identified by the (split, label, video_id) triple, not by
+    video_id alone.
+
+    Returns one row per clip: split, label, video_id, frame_count,
+    min_frame, max_frame (raw frame numbers aren't contiguous within a clip,
+    so max_frame - min_frame + 1 can be larger than frame_count).
+    """
+    data_dir = Path(data_dir)
+    rows = []
+    for split_dir in sorted(p for p in data_dir.iterdir() if p.is_dir()):
+        for label_dir in sorted(p for p in split_dir.iterdir() if p.is_dir()):
+            counts, frame_min, frame_max = {}, {}, {}
+            for img_path in label_dir.glob("*.jpg"):
+                video_id, _, frame_str = img_path.stem.partition("_")
+                frame_number = int(frame_str)
+                counts[video_id] = counts.get(video_id, 0) + 1
+                frame_min[video_id] = min(frame_min.get(video_id, frame_number), frame_number)
+                frame_max[video_id] = max(frame_max.get(video_id, frame_number), frame_number)
+            for video_id, frame_count in counts.items():
+                rows.append({
+                    "split": split_dir.name,
+                    "label": label_dir.name,
+                    "video_id": video_id,
+                    "frame_count": frame_count,
+                    "min_frame": frame_min[video_id],
+                    "max_frame": frame_max[video_id],
+                })
+    return (
+        pd.DataFrame(rows)
+        .sort_values(["split", "label", "video_id"])
+        .reset_index(drop=True)
+    )
 
 def load_images_to_df(image_dir, label=None, label_from_subdir=True, split=None):
     """
@@ -114,6 +156,72 @@ def shuffle_data(X_sample, y_sample, random_state=13):
 
     return shuffle(X_sample, y_sample, random_state=random_state)
 
+def create_validation_set(X_train,y_train,val_size=0.2,random_state=13,stratify=True):
+    """
+    Split training data into training and validation subsets.
+
+    The split is reproducible when ``random_state`` is set. When
+    ``stratify=True``, both subsets preserve approximately the same
+    class distribution as the original training data. The validation
+    subset is shuffled after splitting.
+
+    Parameters
+    ----------
+    X_train : array-like
+        Training features or images. The first dimension must represent
+        individual samples.
+    y_train : array-like
+        Class labels corresponding to ``X_train``.
+    val_size : float or int, default=0.2
+        Proportion or absolute number of samples assigned to the
+        validation set.
+    random_state : int or None, default=13
+        Random seed used to make the split and validation shuffle
+        reproducible. Use ``None`` for non-deterministic behavior.
+    stratify : bool, default=True
+        Whether to preserve the class distribution in both subsets.
+
+    Returns
+    -------
+    X_train_new : array-like
+        Features assigned to the new training set.
+    X_val : array-like
+        Features assigned to the validation set.
+    y_train_new : array-like
+        Labels corresponding to ``X_train_new``.
+    y_val : array-like
+        Labels corresponding to ``X_val``.
+
+    Raises
+    ------
+    ValueError
+        If the input arrays contain different numbers of samples or if
+        stratification cannot be performed.
+
+    Examples
+    --------
+    >>> X_train, X_val, y_train, y_val = create_validation_set(
+    ...     X_train, y_train, val_size=0.2, random_state=13
+    ... )
+    """
+    stratify_labels = y_train if stratify else None
+
+    X_train_new, X_val, y_train_new, y_val = train_test_split(
+        X_train,
+        y_train,
+        test_size=val_size,
+        stratify=stratify_labels,
+        random_state=random_state
+    )
+
+    X_val, y_val = shuffle(
+        X_val,
+        y_val,
+        random_state=random_state
+    )
+
+    return X_train_new, X_val, y_train_new, y_val
+
 def convert_images_to_grayscale(df):
     """
     Return a copy of df with images converted from RGB to grayscale.
@@ -184,157 +292,11 @@ def series_to_numpy(series, stack=False):
     values = series.to_numpy()
     return np.stack(values) if stack else values
 
-def create_validation_set(X_train,y_train,val_size=0.2,random_state=13,tratify=True):
-    """
-    Split training data into training and validation subsets.
-
-    The split is reproducible when ``random_state`` is set. When
-    ``stratify=True``, both subsets preserve approximately the same
-    class distribution as the original training data. The validation
-    subset is shuffled after splitting.
-
-    Parameters
-    ----------
-    X_train : array-like
-        Training features or images. The first dimension must represent
-        individual samples.
-    y_train : array-like
-        Class labels corresponding to ``X_train``.
-    val_size : float or int, default=0.2
-        Proportion or absolute number of samples assigned to the
-        validation set.
-    random_state : int or None, default=13
-        Random seed used to make the split and validation shuffle
-        reproducible. Use ``None`` for non-deterministic behavior.
-    stratify : bool, default=True
-        Whether to preserve the class distribution in both subsets.
-
-    Returns
-    -------
-    X_train_new : array-like
-        Features assigned to the new training set.
-    X_val : array-like
-        Features assigned to the validation set.
-    y_train_new : array-like
-        Labels corresponding to ``X_train_new``.
-    y_val : array-like
-        Labels corresponding to ``X_val``.
-
-    Raises
-    ------
-    ValueError
-        If the input arrays contain different numbers of samples or if
-        stratification cannot be performed.
-
-    Examples
-    --------
-    >>> X_train, X_val, y_train, y_val = create_validation_set(
-    ...     X_train, y_train, val_size=0.2, random_state=13
-    ... )
-    """
-    stratify_labels = y_train if stratify else None
-
-    X_train_new, X_val, y_train_new, y_val = train_test_split(
-        X_train,
-        y_train,
-        test_size=val_size,
-        stratify=stratify_labels,
-        random_state=random_state
-    )
-
-    X_val, y_val = shuffle(
-        X_val,
-        y_val,
-        random_state=random_state
-    )
-
-    return X_train_new, X_val, y_train_new, y_val
-
-def enhance_image(image, dual_channel=False):
-    """
-    Apply Sobel edge detection to a grayscale image.
-
-    Parameters
-    ----------
-    image : np.ndarray
-        Grayscale image with shape (H, W, 1).
-    dual_channel : bool, optional
-        If True, return both the grayscale and enhanced Sobel images as
-        channels. Otherwise, return only the enhanced Sobel image.
-
-    Returns
-    -------
-    np.ndarray
-        Sobel edge-magnitude image with shape (H, W, 1), or, when
-        ``dual_channel`` is True, an image with shape (H, W, 2) containing
-        the grayscale and Sobel channels. The result has dtype float32.
-    
-    Example
-    -------
-    >>> img = X_train[0]
-    >>> enh_img = enhance_image(img)
-    """
-
-    # Convert (H, W, 1) -> (H, W), preserving the grayscale values.
-    img = np.squeeze(image).astype(np.float32)
-
-    # Calculate horizontal and vertical intensity gradients
-    sobel_x = cv2.Sobel(img,cv2.CV_32F,1,0,ksize=3)
-
-    sobel_y = cv2.Sobel(img,cv2.CV_32F,0,1,ksize=3)
-
-    # Combine x and y gradients into overall edge magnitude
-    edges = np.sqrt(sobel_x**2 + sobel_y**2)
-
-    # Normalize to [0, 1]
-    max_value = edges.max()
-
-    if max_value > 0:
-        edges = edges / max_value
-
-    # Restore channel dimension: (H, W) -> (H, W, 1)
-    edges = edges[..., np.newaxis]
-
-    if dual_channel:
-        grayscale = img[..., np.newaxis]
-        return np.concatenate((grayscale, edges), axis=-1).astype(np.float32)
-
-    return edges.astype(np.float32)
-
-def enhance_dataset(X, dual_channel=False):
-    """
-    Apply Sobel edge detection function, enhance_image(), to every image in a dataset.
-
-    Parameters
-    ----------
-    X : np.ndarray
-        Image dataset with shape (N, H, W, 1).
-    dual_channel : bool, optional
-        Forwarded to ``enhance_image``. If True, retain the original
-        grayscale channel alongside the Sobel edge channel.
-
-    Returns
-    -------
-    np.ndarray
-        Sobel-transformed dataset with shape (N, H, W, 1), or shape
-        (N, H, W, 2) when ``dual_channel`` is True,
-        dtype float32 and individual images normalized to [0, 1].
-    
-    Example
-    --------
-    >>> X_train_enh = enhance_dataset(X_train)
-    """
-
-    return np.stack([
-        enhance_image(image, dual_channel=dual_channel)
-        for image in X
-    ]).astype(np.float32)
-
 
 #############################################################################################################
 # Model evaluation:
 
-def plot_training_history(history, metric='loss'):
+def plot_training_history(history, metric='loss', plot_name="", save_dir=SFM_FIGURES_DIR):
     """
     Plots training and validation curves for a given metric from a Keras History dict.
 
@@ -345,6 +307,11 @@ def plot_training_history(history, metric='loss'):
         Expected to contain keys like 'loss', 'val_loss', 'accuracy', 'val_accuracy', etc.
     metric : str, default='loss'
         The metric to plot. Common options: 'loss', 'accuracy', 'precision', 'recall', 'f1_score'.
+    plot_name : str, optional
+        Identifier (e.g. model name) included in the saved chart's filename.
+    save_dir : str or Path, optional
+        Directory the chart is saved to. Defaults to SFM_FIGURES_DIR. Set to
+        None to skip saving and only display the chart.
 
     Returns
     -------
@@ -359,7 +326,7 @@ def plot_training_history(history, metric='loss'):
     Example
     -------
     >>> plot_training_history(trained_model.history, metric='loss')
-    >>> plot_training_history(trained_model_history, metric='accuracy')
+    >>> plot_training_history(trained_model_history, metric='accuracy', plot_name='model_3_2_3')
     """
     val_metric = f"val_{metric}"
 
@@ -374,11 +341,25 @@ def plot_training_history(history, metric='loss'):
     plt.title(f'Training vs Validation {metric.capitalize()}')
     plt.legend()
     plt.grid(True)
+
+    if save_dir is not None:
+        save_dir = Path(save_dir)
+        save_dir.mkdir(parents=True, exist_ok=True)
+        filename = f"{plot_name}_{metric}_history.png" if plot_name else f"{metric}_history.png"
+        plt.savefig(save_dir / filename, bbox_inches="tight")
+        print(f"Saved plot to '{save_dir / filename}'")
+
     plt.show()
 
-def evaluate_model(model,X_test,y_test,class_names=("Class 0", "Class 1"),plot_name=""):
+def evaluate_model(model,X_test,y_test,class_names=("Class 0", "Class 1"),plot_name="",save_dir=SFM_FIGURES_DIR):
     """
     Evaluate a binary Keras classifier using integer labels (0/1).
+
+    Parameters
+    ----------
+    save_dir : str or Path, optional
+        Directory the confusion matrix chart is saved to. Defaults to
+        SFM_FIGURES_DIR. Set to None to skip saving and only display it.
     """
 
     # Ensure labels are compatible with Dense(1, sigmoid)
@@ -435,6 +416,14 @@ def evaluate_model(model,X_test,y_test,class_names=("Class 0", "Class 1"),plot_n
 
     disp.plot(cmap="Blues")
     plt.title(f"Confusion Matrix ({plot_name})")
+
+    if save_dir is not None:
+        save_dir = Path(save_dir)
+        save_dir.mkdir(parents=True, exist_ok=True)
+        filename = f"{plot_name}_confusion_matrix.png" if plot_name else "confusion_matrix.png"
+        plt.savefig(save_dir / filename, bbox_inches="tight")
+        print(f"Saved plot to '{save_dir / filename}'")
+
     plt.show()
 
     return {

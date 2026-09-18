@@ -94,12 +94,10 @@ PROJECT_NAME = "tensorflow-monreader-model"
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 LOCAL_DATA_DIR = PROJECT_ROOT / "data" / "processed" / "sfm"
-
 LOCAL_MODEL_DIR = PROJECT_ROOT / "models" / "sfm" / "aws_trained"
 # make clear distinction between locally trained and AWS trained models in terms of directory (as the identifier) when saving either locally. If in AWS directory, it is AWS trained, else it is a locally trained
-# The naming format of model_x_y will be used for either types for clarity (and cross notebook/script referencing)
 
-MODEL_NAME = "model_3_2_2"
+MODEL_NAME = "final_model"
 
 MODEL_FILENAME = MODEL_NAME + ".keras"
 HISTORY_FILENAME = MODEL_NAME + "_history.json"
@@ -872,7 +870,7 @@ def local_workflow():
     # Create unique job name
     # ---------------------------------------------------------------
 
-    job_name = generate_job_name()
+    job_name = "monreader_model"
 
     # ---------------------------------------------------------------
     # Upload dataset
