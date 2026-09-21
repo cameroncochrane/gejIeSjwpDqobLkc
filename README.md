@@ -12,6 +12,10 @@ A mobile document digitization application powered by computer vision
 ├── LICENSE            <- Open-source license if one is chosen
 ├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
 ├── README.md          <- The top-level README for developers using this project.
+├── app                <- Streamlit demo app for the best SFM model. See app/README.md
+│   ├── streamlit_app.py
+│   ├── requirements.txt
+│   └── assets         <- Small deploy-friendly data bundled with the app (see app/README.md)
 ├── data
 │   ├── external       <- Data from third party sources.
 │   ├── interim        <- Intermediate data that has been transformed.
@@ -73,6 +77,10 @@ A mobile document digitization application powered by computer vision
 
 - **`sfm_processed_data_sobel.pkl`** — grayscale frames with a Sobel edge-detection filter applied on top, to emphasise page edges over flat background/page content. This was an experimental variant and was **not** used to train the final best SFM model.
 - **`sfm_processed_data_gray.pkl`** — the standard grayscale frames (resized and normalized), *before* Sobel enhancement. This is the dataset that was used to train the final best SFM model.
+
+## Streamlit Demo App
+
+`app/` contains a Streamlit app that showcases the best trained SFM model (`model_3_2_3`): live accuracy/F1/AUC/confusion-matrix evaluation over the full held-out test set, a browsable gallery of individual predictions, and a page to upload your own photo and get a live `flip`/`notflip` prediction. See [`app/README.md`](app/README.md) for how to run it locally and how to deploy it on Streamlit Community Cloud.
 
 --------
 
